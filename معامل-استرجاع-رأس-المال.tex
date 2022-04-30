@@ -1,0 +1,63 @@
+\documentclass[a4paper]{article}%
+\usepackage{fontspec}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{derivative}
+\usepackage{tikz}
+% \usepackage{bidi}
+\usepackage{multicol}
+\usepackage{polyglossia, bidi}
+
+\setmainlanguage[locale=mashriq]{arabic}
+\newfontfamily\arabicfont[Script=Arabic]{ScheherazadeNew-Regular} % has to match
+% .otf or .ttf name
+
+\def\matharabic#1{\ensuremath{\text{\begin{Arabic}#1‎\end{Arabic}}}}
+
+\setotherlanguage{english}
+% \title{حساب فترة الاسترداد بطريقة (الخصم المتتابع)}
+\title{معامل استرجاع رأس المال المستثمر ($\bar{RC}$)}
+\author{}
+\date{2022/04/28}
+
+\begin{document}
+\maketitle
+
+هي الفترة الزمنية اللازمة لاسترجاع رأس المال المستثمر وتمثل نسبة مئوية لحصة
+استرجاع السنة الواحدة (من عمر المشروع الافتراضي) من الكلفة الأولية الاستثمارية
+(الاساسية) وتحسب رياضياً:
+\[\bar{RC} = \frac{r(1+r)^{n}}{(1+r)^{n}-1}\]
+حيث أن: \\
+$r$: سعر الخصم (الفائدة) \\
+$n$: سنوات (عمر) المشروع \\
+
+مثال: توفرت لديك البيانات الاتية عن مشروع اقتصادي حيث:
+\[r = 0.07,\ n=10\]
+المطلوب: ايجاد \(\bar{RC}\)
+
+\[\bar{RC} = \frac{0.07(1+0.07)^{10}}{(1+0.07)^{10}-1} = \frac{0.07(1.967)}{(1.967)-1} = 0.1424\]
+أي أن المشروع يسترد سنوياً ($14.24\%$) من الكلفة الاستثمارية الاساسية وهو يمثل
+ايضاً العائد على رأس المال المستثمر ($\text{RoC}$)
+
+ملاحظة: في حالة اضافة معلومة الكلفة الاستثمارية الاساسية ($I_{o} = 200$) الى
+السؤال, يصبح المطلوب:
+\begin{enumerate}
+  \item ايجاد $\bar{RC}$
+  \item ايجاد $\text{RoC}$
+  \item مقدار الكلفة المستردة سنوياً
+  \item فائض الربح المتحقق
+  \item مقدار القسط السنوي للاسترداد
+  \item فترة الاسترداد؟
+\end{enumerate}
+ تحقق من الحل؟
+\begin{align}
+  \bar{RC}=0.1424 \\
+  RoC = 14.24\%  \\
+  0.1424\times 200 = 28.48\ \matharabic{وحدة نقدية (الكلفة المستردة سنوياً)}\\
+  (28.48\times 10) - 200 = 84.8\ \matharabic{وحدة نقدية فائض الربح المتحقق} \\
+  \frac{84.8}{28.48}=2.977\ \matharabic{وحدة نقدية مقدار القسط السنوي للاسترداد} \\
+  10 - 2.977 = 7.023\ \matharabic{سنة فترة الاسترداد}
+\end{align}
+التحقيق: \[\text{RoC} = \frac{1}{\text{pbp}} = \frac{1}{7.023} = 0.1424\]
+
+\end{document}
