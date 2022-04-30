@@ -1,0 +1,123 @@
+\documentclass[a4paper]{article}%
+\usepackage{fontspec}
+\usepackage{pgfplots}
+\usepackage{amsmath}
+\usepackage{derivative}
+\usepackage{tikz}
+% \usepackage{bidi}
+\usepackage{multicol}
+\usepackage{polyglossia, bidi}
+
+\setmainlanguage[locale=mashriq]{arabic}
+\newfontfamily\arabicfont[Script=Arabic]{ScheherazadeNew-Regular} % has to match
+% .otf or .ttf name
+
+\def\matharabic#1{\ensuremath{\text{\begin{Arabic}#1‎\end{Arabic}}}}
+
+\setotherlanguage{english}
+% \title{حساب فترة الاسترداد بطريقة (الخصم المتتابع)}
+\title{معيار سعر الخصم الامثل \textenglish{Internal Rate of Return (IRR)}}
+\author{}
+\date{2022/04/25}
+
+\pgfplotsset{grid style={dashed,gray}}
+% \pgfplotsset{minor grid style={dashed,red}}
+% \pgfplotsset{major grid style={dotted,green!50!black}}
+
+
+\begin{document}
+\maketitle
+
+هو سعر الفائدة الذي يجعل صافي القيمة الحالية مساوي الى الصفر ($\text{NPV} = 0$) أو هو
+اعلى معدل للعائد الذي يحصل عليه المشروع الاستثماري عن نشاطه الجاري ويحسب
+بطريقتين:
+
+\section{الطريقة الرياضية}%
+
+\begin{align*}
+  IRR = r_1 + \frac{(r_{2}-r_{1}) \cdot \text{NPV}_{+}}{|\text{NPV}_{+}+\text{NPV}_{-}|}
+\end{align*}
+حيث \\
+$r_1$: سعر الخصم الأدنى \\
+$r_2$: سعر الخصم الأعلى \\
+$\text{NPV}_{+}$: صافي القيمة الحالية الموجبة وصيغته $NPV_{+} = \sum PV_{1} - I_{o} > 0$ \\
+$\text{NPV}_{-}$: صافي القيمة الحالية السالبة وصيغته $NPV_{-} = \sum PV_{2} - I_{o} < 0$ \\
+
+مثال: في مشروع اقتصادي اذا علمت:
+\[r_{1} = 0.20, r_{2} = 0.30, I_o = 94, \sum PV_1 = 100, \sum PV_{2} = 90\]
+المطلوب: ايجاد سعر الخصم الامثل ($IRR$) رياضياً وبيانياً
+
+\begin{align}
+  \text{NPV}_+ = \sum PV_{1} - I_{o} \\
+  \text{NPV}_+ = 100 - 94 = 6 > 0 \\
+  \text{NPV}_- = \sum PV_2 - I_{0} \\
+  \text{NPV}_- = 90 - 94 = -4 < 0 \\
+  \text{IRR} = \frac{(r_{2}-r_{1}) \cdot \text{NPV}_{+}}{|\text{NPV}_{+}+\text{NPV}_{-}|} \\
+  \text{IRR} = 0.20 + \frac{(0.30 - 0.20) \cdot 6}{|6+4|} \\
+  \text{IRR} = 0.20 + 0.06 = 0.26
+\end{align}
+ملاحظة: سعر الخصم الامثل ($\text{IRR}$) اكبر من سعر الخصم الادنى واصغر من سعر الخصم الاعلى, اي ان:
+\[r_1 = 0.20 < \text{IRR} = 0.26 < r_2 = 0.30\]
+
+\section{الطريقة البيانية}%
+
+\begin{tikzpicture}
+
+  \begin{axis}[
+    xlabel=IRR,
+    ylabel=NPV,
+    width=10cm,height=9cm,
+    % axis lines = middle
+    % axis line style={draw=none}
+    % legend style={at={(0.0,.91)},anchor=west}
+    xtick = {0, 0.1, 0.2, 0.3, 0.4},
+    xmin = 0,
+    xmax = 0.4,
+    grid=both
+    ]
+
+    % Add values and attributes for the first plot
+    % x-axis
+    \addplot[color=black] coordinates {
+      (0,0) (0.4,0)
+    };
+
+
+    \addplot[color=black] coordinates {
+      (0,6) (0.2, 6)
+      (0.2, 6) (0.2,0)
+    };
+
+    \addplot[color=blue, dashed] coordinates {
+      (0.2,6) (0.3, -4)
+    };
+
+    \addplot[color=black] coordinates {
+      (0,-4) (0.3, -4)
+      (0.3, -4) (0.3,0)
+    };
+
+    \node[label={above right:{$A (0.20,6)$}},circle,fill,inner sep=2pt] at (axis
+    cs:0.2,6) {};
+
+    \node[label={above right:{$C (0.26,0)$}},circle,fill,inner sep=2pt] at (axis
+    cs:0.26,0) {};
+
+    \node[label={above right:{$B (0.30,-4)$}},circle,fill,inner sep=2pt] at (axis
+    cs:0.3,-4) {};
+    % \legend{Case 1,Case 2}
+  \end{axis}
+\end{tikzpicture}
+
+الفكرة والاستنتاج:
+\begin{enumerate}
+  \item يتم رسم الاحداثيات العمودي (\textenglish{NPV}) الجزء الموجب لغاية 6 والجزء السالب لغاية $-4$ والمحور الافقي (\textenglish{IRR}).
+  \item يتم تحديد النقاط (التوليفة الهندسية) في الجزء الموجب ($0.20, 6$) \textenglish{A} وفي الجزء السالب ($0.30, -4$)\textenglish{B}.
+  \item يتم رسم خط مستقيم (المتقطع) ليصل بين النقطتين ($A, B$).
+  \item يقطع المحور الافقي ($\text{IRR}$) عند النقطة $C$ واحداثياتها ($0.26, 0$) \textenglish{C} والتي تمثل سعر الخصم الامثل ($\text{IRR} = 0.26$).
+  \item يجعل \textenglish{IRR} الامثل صافي القيمة الحالية مساوي الى الصفر ($\text{NPV} = 0$)
+\end{enumerate}
+
+الاستنتاج: نفس الاستنتاج بالطريقة الرياضية وهو ان:
+\[r_1 = 0.20 < \text{IRR} = 0.26 < r_2 = 0.30\]
+\end{document}
